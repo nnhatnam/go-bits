@@ -6,13 +6,14 @@
 ```
  &   bitwise AND
  |   bitwise OR
- ^   bitwise XOR
-&^   AND NOT
+ ^   bitwise XOR (0011 ^ 0101)
+ ^   bitwise NOT (^0101)
+&^   Bitclear (AND NOT)
 <<   left shift
 >>   right shift
 ```
 
-**Go's integer is represented using two's complement arithmetic, according to its [spec](https://golang.org/ref/spec#Numeric_types)**
+**Go's integer is represented using two's complement arithmetic, more detail at [spec](https://golang.org/ref/spec#Numeric_types)**
 
 ### Shift and Division
 
@@ -42,17 +43,23 @@ if( !( a & b ) )    // ==   if ( a == 0 || b == 0 )
 if ( (a|b|c|...|z) == 0 )   // == if ( (a == 0)  && (b == 0) && (c == 0) ... && (z == 0) )
 ``` 
 
+**Check whether exactly one of two variables is zero**
+```
+if ( (^a) ^ (^b) )         // == if ( ( a == 0 && b != 0 ) || ( a != 0 && b == 0) )
+```
+
 ### Pitfall
 
 **Absolute Number**  
 We CAN'T just simply write absolute function like this 
 ```
-if ( x < 0 ) x = -x;   // WRONG!
+if ( x < 0 ) x = -x;  
 ```
 because in two's complement zero is not the only number that is equal to its negative. The value with just the highest 
-bit set (the most negative value) also has this property. For example, the most negative value of int16 is -32768. We've 
+bit set (the minimum negative value) also has this property. For example, the most minimum value of int16 is -32768. Then we 
 got
 ```go
-var int16 x = -32768 
-fmt.Println(x == -x)             // TRUE!!! , -x is -32768 also  
+var int16 INT16_MIN = -32768 
+fmt.Println(INT16_MIN == -INT16_MIN)             // print true
 ```  
+So, to avoid that, we need to handle that case. Either overflow panic or point out in the document.
