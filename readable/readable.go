@@ -33,3 +33,4 @@ func PrevOdd(x uint) uint { return findEvenNumLessOrEqual(x) - 1 }
 
 //Compute next odd value. The algorithm is increase x by 1 then find the closet odd number
 func NextOdd(x uint) uint { return findOddNumGreaterOrEqual(x + 1) }
+
