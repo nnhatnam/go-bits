@@ -179,3 +179,75 @@ func LowBorderOnes(x uint) uint {
 	return x & ( x ^ (x<<1) )
 }
 
+// Return word where only those ones of x are set
+// that are at the border of a block of at least 2 bits.
+func BlockBorderOnes(x uint) uint {
+	return x & ((x << 1) ^ (x >> 1))
+}
+
+// Return word where only those bits of x are set
+// that are at left of a border of a block of at least 2 bits.
+func LowBlockBorderOnes(x uint) uint{
+	var t = x & ( (x<<1) ^ (x>>1) )
+	return t & (x>>1)
+}
+
+// Return word where only those bits of x are set
+// that are at right of a border of a block of at least 2 bits.
+func HighBlockBorderOnes(x uint) uint {
+	t := x & ( (x<<1) ^ (x>>1) )
+	return t & (x<<1)
+}
+
+// Return word where only those bits of x are set
+// that are part of a block of at least 2 bits
+func BlockOnes(x uint) uint {
+	return x & ( (x<<1) | (x>>1) )
+}
+
+// Return word where all the (high end) zeros are set.
+// e.g.: 00011001 --> 11100000
+// Returns 0 if highest bit is set:
+// 11011001 --> 00000000
+//func HighZeros()
+
+
+// Return floor(log2(x)),
+// i.e. return k so that 2^k <= x < 2^(k+1)
+// If x==0, then 0 is returned (!)
+func  Ld(x uint) uint {
+	var k uint = 0
+	for ; x >= 0 ; x >>= 1 {
+		k++
+	}
+	return k
+}
+
+// Return whether x \in {1,2,4,8,16,...}
+func OneBitQ(x uint) bool {
+	var m uint = x - 1
+	return (((x^m)>>1) == m)
+}
+
+// Return whether x == 0(!) or x == 2**k
+func IsPowerOf2(x uint) bool {
+	return (x & (x-1)) == 0
+}
+
+// Return x if x=2**k
+// else return 2**ceil(log_2(x))
+// Exception: returns 0 for x==0
+//func NextPowOf2(x uint) uint {
+//
+//}
+
+// Return whether the set bits of u are a subset of the set bits of e.
+// That is, as bitsets, test whether u is a subset of e.
+func IsSubset(u , e uint) bool {
+	return  (u & e)==u
+}
+
+// Return whether u (as bitset) is a proper subset of e.
+func IsProperSubset(u , e uint) bool {
+	return  (u<e) && ((u & e)==u)
+}
